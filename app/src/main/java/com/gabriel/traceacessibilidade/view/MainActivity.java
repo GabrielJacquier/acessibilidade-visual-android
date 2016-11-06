@@ -18,7 +18,8 @@ import com.gabriel.traceacessibilidade.R;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import com.gabriel.traceacessibilidade.model.MessageVoiceEnum;
+import com.gabriel.traceacessibilidade.model.MessageEnum;
+import com.gabriel.traceacessibilidade.model.OutputVoiceMessage;
 
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class MainActivity extends AppCompatActivity implements RecognitionListener {
@@ -26,7 +27,8 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     private SpeechRecognizer speech = null;
     private Intent recognizerIntent = null;
     private TextView returnText;
-    TextToSpeech testToSpeech = null;
+    private TextToSpeech testToSpeech = null;
+    private OutputVoiceMessage outputVoiceMessage = new OutputVoiceMessage();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
                     public void onInit(int status) {
                         if(status != TextToSpeech.ERROR) {
                             testToSpeech.setLanguage(Locale.getDefault());
-                            testToSpeech.speak(MessageVoiceEnum.APRESENTACAO.getMessage(), TextToSpeech.QUEUE_FLUSH, null, "ID_TRACE_FALA");
+                            testToSpeech.speak(MessageEnum.APRESENTACAO.getMessage(), TextToSpeech.QUEUE_FLUSH, null, "ID_TRACE_FALA");
                         }
                     }
                 }
@@ -113,14 +115,10 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
     @Override
     public void onResults(Bundle results) {
-        ArrayList<String> matches = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-        String text = matches.get(0);
-        if(text.toLowerCase().contains("estou bem")) {
-            testToSpeech.speak("Que bom! eu também estou bem!", TextToSpeech.QUEUE_FLUSH, null, "ID_TRACE_FALA");
-        } else {
-            testToSpeech.speak("Não entendi, você pode repetir?", TextToSpeech.QUEUE_FLUSH, null, "ID_TRACE_FALA");
-        }
-        returnText.setText(text);
+        ArrayList<String> resultadosPossiveis = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+        String mensagemUsuario = resultadosPossiveis.get(0);
+        testToSpeech.speak(outputVoiceMessage.responderMensagem(mensagemUsuario), TextToSpeech.QUEUE_FLUSH, null, "ID_TRACE_FALA");
+        returnText.setText(mensagemUsuario);
     }
 
     @Override
