@@ -6,13 +6,12 @@ package com.gabriel.traceacessibilidade.model;
 
 public enum MessageEnum {
     APRESENTACAO("Olá. Bem-vindo ao aplicativo Acessibilidade! Nós podemos te informar os horários dos ônibus. Tudo o que você precisa fazer é só perguntar, e eu vou te ajudar!"),
-    PERGUNTARNOMEONIBUS("De qual Ônibus você gostária de saber o horário?"),
-    RESPOSTAHORARIOONIBUS("O horário previsto para o ônibus {} é de 7 horas no ponto final! E 7 horas e 15 no terminal."),
-    DESCULPENAOENTENDI("Desculpe! Não entendi! Você pode repetir?");
+    PERGUNTARNOMEONIBUS("De qual Ônibus você gostaria de saber o horário?!"),
+    RESPOSTAHORARIOONIBUS("O horário previsto para o ônibus {onibus} é de {horarioPontoFinal} no ponto final! E {horarioTerminal} no terminal."),
+    DESCULPENAOENTENDI("Desculpe! Não entendi! Você pode repetir?!");
 
     private String message;
-    private String parametro;
-
+    private Onibus onibus;
     MessageEnum(String message) {
         this.message = message;
     }
@@ -22,12 +21,15 @@ public enum MessageEnum {
     }
 
     public String getMessage() {
-        if(parametro != null)
-            return message.replace("{}", parametro);
+        if(onibus != null) {
+            message = message.replace("{onibus}", onibus.getNome());
+            message = message.replace("{horarioTerminal}", onibus.getHorarioTerminalText());
+            message = message.replace("{horarioPontoFinal}", onibus.getHorarioPontoFinalText());
+        }
         return message;
     }
 
-    public void setParametro(String parametro) {
-        this.parametro = parametro;
+    public void setOnibus(Onibus onibus) {
+        this.onibus = onibus;
     }
 }

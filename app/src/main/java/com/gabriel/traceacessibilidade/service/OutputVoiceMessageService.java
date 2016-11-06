@@ -1,14 +1,18 @@
-package com.gabriel.traceacessibilidade.model;
+package com.gabriel.traceacessibilidade.service;
+
+import com.gabriel.traceacessibilidade.model.MessageEnum;
+import com.gabriel.traceacessibilidade.model.Onibus;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 /**
  * Created by gabriel on 06/11/16.
  */
 
-public class OutputVoiceMessage {
+public class OutputVoiceMessageService {
 
     private boolean aguardandoNomeOnibus;
 
@@ -21,7 +25,7 @@ public class OutputVoiceMessage {
         if(aguardandoNomeOnibus) {
             aguardandoNomeOnibus = false;
             MessageEnum resposta = MessageEnum.RESPOSTAHORARIOONIBUS;
-            resposta.setParametro(mensagemUsuario);
+            resposta.setOnibus(procurarHorarioOnibus(mensagemUsuario));
             return resposta.getMessage();
         }
 
@@ -32,5 +36,13 @@ public class OutputVoiceMessage {
         else {
             return MessageEnum.DESCULPENAOENTENDI.getMessage();
         }
+    }
+
+    private Onibus procurarHorarioOnibus(String nomeOnibus) {
+        Onibus onibus = new Onibus();
+        onibus.setHorarioPontoFinal(new Date());
+        onibus.setHorarioTerminal(new Date());
+        onibus.setNome(nomeOnibus);
+        return onibus;
     }
 }

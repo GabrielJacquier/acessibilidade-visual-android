@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import com.gabriel.traceacessibilidade.model.MessageEnum;
-import com.gabriel.traceacessibilidade.model.OutputVoiceMessage;
+import com.gabriel.traceacessibilidade.service.OutputVoiceMessageService;
 
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class MainActivity extends AppCompatActivity implements RecognitionListener {
@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     private Intent recognizerIntent = null;
     private TextView returnText;
     private TextToSpeech testToSpeech = null;
-    private OutputVoiceMessage outputVoiceMessage = new OutputVoiceMessage();
+    private OutputVoiceMessageService outputVoiceMessage = new OutputVoiceMessageService();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
