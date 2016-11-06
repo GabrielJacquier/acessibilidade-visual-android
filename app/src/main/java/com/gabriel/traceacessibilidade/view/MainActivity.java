@@ -12,14 +12,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
 import com.gabriel.traceacessibilidade.R;
 
 import java.util.ArrayList;
 import java.util.Locale;
 
-import model.MessageVoiceEnum;
+import com.gabriel.traceacessibilidade.model.MessageVoiceEnum;
 
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class MainActivity extends AppCompatActivity implements RecognitionListener {

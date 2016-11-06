@@ -1,4 +1,4 @@
-package model;
+package com.gabriel.traceacessibilidade.model;
 
 /**
  * Created by gabriel on 06/11/16.
