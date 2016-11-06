@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">TraceAcessibilidade</string>
+
+    <string name="teste">Olá</string>
 </resources>
