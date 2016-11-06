@@ -1,48 +1,64 @@
 package com.gabriel.traceacessibilidade.service;
 
-import com.gabriel.traceacessibilidade.model.MessageEnum;
-import com.gabriel.traceacessibilidade.model.Onibus;
+import android.annotation.TargetApi;
+import android.content.Context;
+import android.os.Build;
+import android.speech.SpeechRecognizer;
+import android.speech.tts.TextToSpeech;
+import android.speech.tts.UtteranceProgressListener;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import com.gabriel.traceacessibilidade.model.MessageEnum;
+import com.gabriel.traceacessibilidade.view.MainActivity;
+
+import java.util.Locale;
 
 /**
  * Created by gabriel on 06/11/16.
  */
 
-public class OutputVoiceMessageService {
+@TargetApi(Build.VERSION_CODES.LOLLIPOP)
+public class OutputVoiceMessageService extends UtteranceProgressListener implements TextToSpeech.OnInitListener {
 
-    private boolean aguardandoNomeOnibus;
+    private TextToSpeech textToSpeech = null;
+    private MainActivity activityMain;
+    private InputVoiceMessageService inputVoiceMessageService;
 
-    public String responderMensagem(String mensagemUsuario) {
-        return escolherMensagemParaResposta(mensagemUsuario);
+    public OutputVoiceMessageService(MainActivity activity, InputVoiceMessageService inputVoiceMessageService) {
+        this.activityMain = activity;
+        this.inputVoiceMessageService = inputVoiceMessageService;
+        textToSpeech = new TextToSpeech(activity, this);
+        textToSpeech.setOnUtteranceProgressListener(this);
     }
 
-    private String escolherMensagemParaResposta(String mensagemUsuario) {
-        List<String> pedacosMensagem = Arrays.asList(mensagemUsuario.toLowerCase().split(" "));
-        if(aguardandoNomeOnibus) {
-            aguardandoNomeOnibus = false;
-            MessageEnum resposta = MessageEnum.RESPOSTAHORARIOONIBUS;
-            resposta.setOnibus(procurarHorarioOnibus(mensagemUsuario));
-            return resposta.getMessage();
-        }
+    public void falarParaUsuario(String message) {
+        textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, "ID_TRACE_FALA");
+    }
 
-        if(pedacosMensagem.contains("horário") || pedacosMensagem.contains("hora")) {
-            aguardandoNomeOnibus = true;
-            return MessageEnum.PERGUNTARNOMEONIBUS.getMessage();
-        }
-        else {
-            return MessageEnum.DESCULPENAOENTENDI.getMessage();
+    @Override
+    public void onInit(int status) {
+        if(status != TextToSpeech.ERROR) {
+            textToSpeech.setLanguage(Locale.getDefault());
+            textToSpeech.speak(MessageEnum.APRESENTACAO.getMessage(), TextToSpeech.QUEUE_FLUSH, null, "ID_TRACE_FALA");
         }
     }
 
-    private Onibus procurarHorarioOnibus(String nomeOnibus) {
-        Onibus onibus = new Onibus();
-        onibus.setHorarioPontoFinal(new Date());
-        onibus.setHorarioTerminal(new Date());
-        onibus.setNome(nomeOnibus);
-        return onibus;
+    @Override
+    public void onStart(String utteranceId) {
+
+    }
+
+    @Override
+    public void onDone(String utteranceId) {
+        activityMain.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                inputVoiceMessageService.escutarUsuario();
+            }
+        });
+    }
+
+    @Override
+    public void onError(String utteranceId) {
+
     }
 }
