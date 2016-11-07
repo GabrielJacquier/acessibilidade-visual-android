@@ -15,17 +15,15 @@ import java.util.Locale;
  */
 
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-public class OutputVoiceMessageService extends UtteranceProgressListener implements TextToSpeech.OnInitListener {
+public class OutputVoiceMessageService implements TextToSpeech.OnInitListener {
 
     private TextToSpeech textToSpeech = null;
-    private MainActivity activityMain;
-    private InputVoiceMessageService inputVoiceMessageService;
+    private OutputProgressListener outputProgressListener = null;
 
     public OutputVoiceMessageService(MainActivity activity, InputVoiceMessageService inputVoiceMessageService) {
-        this.activityMain = activity;
-        this.inputVoiceMessageService = inputVoiceMessageService;
         textToSpeech = new TextToSpeech(activity, this);
-        textToSpeech.setOnUtteranceProgressListener(this);
+        outputProgressListener = new OutputProgressListener(activity, inputVoiceMessageService);
+        textToSpeech.setOnUtteranceProgressListener(outputProgressListener);
     }
 
     public void speechToUser(String message) {
@@ -36,27 +34,7 @@ public class OutputVoiceMessageService extends UtteranceProgressListener impleme
     public void onInit(int status) {
         if(status != TextToSpeech.ERROR) {
             textToSpeech.setLanguage(Locale.getDefault());
-            textToSpeech.speak(MessageEnum.APRESENTATION.getMessage(), TextToSpeech.QUEUE_FLUSH, null, "ID_TRACE_FALA");
+            textToSpeech.speak(MessageEnum.PRESENTATION.getMessage(), TextToSpeech.QUEUE_FLUSH, null, "ID_TRACE_FALA");
         }
-    }
-
-    @Override
-    public void onStart(String utteranceId) {
-
-    }
-
-    @Override
-    public void onDone(String utteranceId) {
-        activityMain.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                inputVoiceMessageService.listeningUser();
-            }
-        });
-    }
-
-    @Override
-    public void onError(String utteranceId) {
-
     }
 }

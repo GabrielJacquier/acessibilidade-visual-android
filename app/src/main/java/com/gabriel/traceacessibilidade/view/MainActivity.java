@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
         inputVoiceMessageService = new InputVoiceMessageService(this);
         outputVoiceMessageService = new OutputVoiceMessageService(this, inputVoiceMessageService);
         inputVoiceMessageService.setOutputVoiceMessageService(outputVoiceMessageService);
-    }
 
+    }
 
 }

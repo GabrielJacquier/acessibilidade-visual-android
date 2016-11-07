@@ -23,7 +23,7 @@ public class OutputVoiceMessageBusiness {
         List<String> piecesMessage = Arrays.asList(userMessage.toLowerCase().split(" "));
         if(waitingByName) {
             waitingByName = false;
-            MessageEnum response = MessageEnum.RESPONSER_HOUR_PUBLIC_TRANSPORT;
+            MessageEnum response = MessageEnum.RESPONSE_HOUR_PUBLIC_TRANSPORT;
             response.setPublicTransport(serchHourPublicTransport(userMessage));
             return response.getMessage();
         }
