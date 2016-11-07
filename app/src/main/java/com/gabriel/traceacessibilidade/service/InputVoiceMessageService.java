@@ -49,7 +49,7 @@ public class InputVoiceMessageService implements RecognitionListener {
     public void onResults(Bundle results) {
         ArrayList<String> possibleResults = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
         String userMessage = possibleResults.get(0);
-        outputVoiceMessageService.speechToUser(outputVoiceMessage.responseMessage(userMessage));
+        outputVoiceMessageService.speechToUserAfterListening(outputVoiceMessage.responseMessage(userMessage));
     }
 
     @Override

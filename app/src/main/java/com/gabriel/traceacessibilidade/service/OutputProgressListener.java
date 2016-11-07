@@ -1,8 +1,8 @@
 package com.gabriel.traceacessibilidade.service;
 
-import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
 
+import com.gabriel.traceacessibilidade.model.OptionProgressListenerEnum;
 import com.gabriel.traceacessibilidade.view.MainActivity;
 
 /**
@@ -26,12 +26,14 @@ public class OutputProgressListener extends UtteranceProgressListener {
 
     @Override
     public void onDone(String utteranceId) {
-        activityMain.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                inputVoiceMessageService.listeningUser();
-            }
-        });
+        if(OptionProgressListenerEnum.isListener(utteranceId)) {
+            activityMain.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    inputVoiceMessageService.listeningUser();
+                }
+            });
+        }
     }
 
     @Override
