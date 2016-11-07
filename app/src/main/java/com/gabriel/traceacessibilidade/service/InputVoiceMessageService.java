@@ -36,7 +36,7 @@ public class InputVoiceMessageService implements RecognitionListener {
         recognizerIntent.putExtra(RecognizerIntent.EXTRA_SUPPORTED_LANGUAGES, "en-US");
     }
 
-    public void escutarUsuario() {
+    public void listeningUser() {
         speech.stopListening();
         speech.startListening(recognizerIntent);
     }
@@ -47,9 +47,9 @@ public class InputVoiceMessageService implements RecognitionListener {
 
     @Override
     public void onResults(Bundle results) {
-        ArrayList<String> resultadosPossiveis = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-        String mensagemUsuario = resultadosPossiveis.get(0);
-        outputVoiceMessageService.falarParaUsuario(outputVoiceMessage.responderMensagem(mensagemUsuario));
+        ArrayList<String> possibleResults = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+        String userMessage = possibleResults.get(0);
+        outputVoiceMessageService.speechToUser(outputVoiceMessage.responseMessage(userMessage));
     }
 
     @Override

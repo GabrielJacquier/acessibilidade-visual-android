@@ -1,9 +1,8 @@
 package com.gabriel.traceacessibilidade.business;
 
 import com.gabriel.traceacessibilidade.model.MessageEnum;
-import com.gabriel.traceacessibilidade.model.Onibus;
+import com.gabriel.traceacessibilidade.model.PublicTransport;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -14,35 +13,35 @@ import java.util.List;
 
 public class OutputVoiceMessageBusiness {
 
-    private boolean aguardandoNomeOnibus;
+    private boolean waitingByName;
 
-    public String responderMensagem(String mensagemUsuario) {
-        return escolherMensagemParaResposta(mensagemUsuario);
+    public String responseMessage(String userMessage) {
+        return chooseMenssageToResponse(userMessage);
     }
 
-    private String escolherMensagemParaResposta(String mensagemUsuario) {
-        List<String> pedacosMensagem = Arrays.asList(mensagemUsuario.toLowerCase().split(" "));
-        if(aguardandoNomeOnibus) {
-            aguardandoNomeOnibus = false;
-            MessageEnum resposta = MessageEnum.RESPOSTAHORARIOONIBUS;
-            resposta.setOnibus(procurarHorarioOnibus(mensagemUsuario));
-            return resposta.getMessage();
+    private String chooseMenssageToResponse(String userMessage) {
+        List<String> piecesMessage = Arrays.asList(userMessage.toLowerCase().split(" "));
+        if(waitingByName) {
+            waitingByName = false;
+            MessageEnum response = MessageEnum.RESPONSER_HOUR_PUBLIC_TRANSPORT;
+            response.setPublicTransport(serchHourPublicTransport(userMessage));
+            return response.getMessage();
         }
 
-        if(pedacosMensagem.contains("horário") || pedacosMensagem.contains("hora")) {
-            aguardandoNomeOnibus = true;
-            return MessageEnum.PERGUNTARNOMEONIBUS.getMessage();
+        if(piecesMessage.contains("horário") || piecesMessage.contains("hora")) {
+            waitingByName = true;
+            return MessageEnum.ASK_NAME_TRANSPORT_PUBLIC.getMessage();
         }
         else {
-            return MessageEnum.DESCULPENAOENTENDI.getMessage();
+            return MessageEnum.SORRY_NOT_UNDERSTAND.getMessage();
         }
     }
 
-    private Onibus procurarHorarioOnibus(String nomeOnibus) {
-        Onibus onibus = new Onibus();
-        onibus.setHorarioPontoFinal(new Date());
-        onibus.setHorarioTerminal(new Date());
-        onibus.setNome(nomeOnibus);
-        return onibus;
+    private PublicTransport serchHourPublicTransport(String namePublicTransport) {
+        PublicTransport publicTransport = new PublicTransport();
+        publicTransport.setHourBusTerminal(new Date());
+        publicTransport.setHourEndPoint(new Date());
+        publicTransport.setName(namePublicTransport);
+        return publicTransport;
     }
 }

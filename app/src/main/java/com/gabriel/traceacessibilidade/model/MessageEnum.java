@@ -5,31 +5,28 @@ package com.gabriel.traceacessibilidade.model;
  */
 
 public enum MessageEnum {
-    APRESENTACAO("Olá. Bem-vindo ao aplicativo Acessibilidade! Nós podemos te informar os horários dos ônibus. Tudo o que você precisa fazer é só perguntar, e eu vou te ajudar!"),
-    PERGUNTARNOMEONIBUS("De qual Ônibus você gostaria de saber o horário?!"),
-    RESPOSTAHORARIOONIBUS("O horário previsto para o ônibus {onibus} é de {horarioPontoFinal} no ponto final! E {horarioTerminal} no terminal."),
-    DESCULPENAOENTENDI("Desculpe! Não entendi! Você pode repetir?!");
+    APRESENTATION("Olá. Bem-vindo ao aplicativo Acessibilidade! Nós podemos te informar os horários dos ônibus. Tudo o que você precisa fazer é só perguntar, e eu vou te ajudar!"),
+    ASK_NAME_TRANSPORT_PUBLIC("De qual Ônibus você gostaria de saber o horário?!"),
+    RESPONSER_HOUR_PUBLIC_TRANSPORT("O horário previsto para o ônibus {onibus} é de {horarioPontoFinal} no ponto final! E {horarioTerminal} no terminal."),
+    SORRY_NOT_UNDERSTAND("Desculpe! Não entendi! Você pode repetir?!");
 
     private String message;
-    private Onibus onibus;
+    private PublicTransport publicTransport;
+
     MessageEnum(String message) {
         this.message = message;
     }
 
-    MessageEnum(String message, String parametro) {
-        this.message = message;
-    }
-
     public String getMessage() {
-        if(onibus != null) {
-            message = message.replace("{onibus}", onibus.getNome());
-            message = message.replace("{horarioTerminal}", onibus.getHorarioTerminalText());
-            message = message.replace("{horarioPontoFinal}", onibus.getHorarioPontoFinalText());
+        if(publicTransport != null) {
+            message = message.replace("{onibus}", publicTransport.getName());
+            message = message.replace("{horarioTerminal}", publicTransport.getHourBusTerminalText());
+            message = message.replace("{horarioPontoFinal}", publicTransport.getHourEndPointText());
         }
         return message;
     }
 
-    public void setOnibus(Onibus onibus) {
-        this.onibus = onibus;
+    public void setPublicTransport(PublicTransport publicTransport) {
+        this.publicTransport = publicTransport;
     }
 }

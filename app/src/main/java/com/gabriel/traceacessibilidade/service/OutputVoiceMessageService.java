@@ -1,9 +1,7 @@
 package com.gabriel.traceacessibilidade.service;
 
 import android.annotation.TargetApi;
-import android.content.Context;
 import android.os.Build;
-import android.speech.SpeechRecognizer;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
 
@@ -30,7 +28,7 @@ public class OutputVoiceMessageService extends UtteranceProgressListener impleme
         textToSpeech.setOnUtteranceProgressListener(this);
     }
 
-    public void falarParaUsuario(String message) {
+    public void speechToUser(String message) {
         textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, "ID_TRACE_FALA");
     }
 
@@ -38,7 +36,7 @@ public class OutputVoiceMessageService extends UtteranceProgressListener impleme
     public void onInit(int status) {
         if(status != TextToSpeech.ERROR) {
             textToSpeech.setLanguage(Locale.getDefault());
-            textToSpeech.speak(MessageEnum.APRESENTACAO.getMessage(), TextToSpeech.QUEUE_FLUSH, null, "ID_TRACE_FALA");
+            textToSpeech.speak(MessageEnum.APRESENTATION.getMessage(), TextToSpeech.QUEUE_FLUSH, null, "ID_TRACE_FALA");
         }
     }
 
@@ -52,7 +50,7 @@ public class OutputVoiceMessageService extends UtteranceProgressListener impleme
         activityMain.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                inputVoiceMessageService.escutarUsuario();
+                inputVoiceMessageService.listeningUser();
             }
         });
     }
