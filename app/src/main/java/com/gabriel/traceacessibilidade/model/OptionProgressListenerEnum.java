@@ -6,7 +6,8 @@ package com.gabriel.traceacessibilidade.model;
 
 public enum OptionProgressListenerEnum {
     AFTER_LISTENING("AFTER_LISTENING"),
-    AFTER_NOT_LISTENING("AFTER_NOT_LISTENING");
+    AFTER_NOT_LISTENING("AFTER_NOT_LISTENING"),
+    AFTER_KILL_APPLICATION("AFTER_KILL_APPLICATION");
 
     private String id;
 
@@ -16,6 +17,10 @@ public enum OptionProgressListenerEnum {
 
     public static boolean isListener(String id) {
         return AFTER_LISTENING.getId().equals(id);
+    }
+
+    public static boolean isKill(String id) {
+        return AFTER_KILL_APPLICATION.getId().equals(id);
     }
 
     public String getId() {

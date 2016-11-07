@@ -2,6 +2,7 @@ package com.gabriel.traceacessibilidade.business;
 
 import com.gabriel.traceacessibilidade.model.MessageEnum;
 import com.gabriel.traceacessibilidade.model.PublicTransport;
+import com.gabriel.traceacessibilidade.service.OutputVoiceMessageService;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -14,27 +15,61 @@ import java.util.List;
 public class OutputVoiceMessageBusiness {
 
     private boolean waitingByName;
+    private String userName;
+    private OutputVoiceMessageService outputVoiceMessageService;
+    private String userMessage;
 
-    public String responseMessage(String userMessage) {
-        return chooseMenssageToResponse(userMessage);
+    public OutputVoiceMessageBusiness(OutputVoiceMessageService outputVoiceMessageService) {
+        this.outputVoiceMessageService = outputVoiceMessageService;
     }
 
-    private String chooseMenssageToResponse(String userMessage) {
+    public void responseMessage(String userMessage) {
+        this.userMessage = userMessage;
+        if(!executeCommandVoice()) {
+            String message = chooseMenssageToResponse();
+            outputVoiceMessageService.speechToUserAfterListening(message);
+        }
+    }
+
+    private boolean executeCommandVoice() {
+        boolean commandVoiceKill = checkMessage("xau") || checkMessage("tchau") || checkMessage("até mais");
+        if(commandVoiceKill) {
+            MessageEnum response = MessageEnum.THANK_YOU;
+            response.setUserName(userName);
+            outputVoiceMessageService.speechAfterKillAplication(response.getMessage());
+        }
+        return commandVoiceKill;
+    }
+
+    private String chooseMenssageToResponse() {
         List<String> piecesMessage = Arrays.asList(userMessage.toLowerCase().split(" "));
+        MessageEnum response = null;
+
+        if(userName == null) {
+            userName = userMessage;
+            response = MessageEnum.RESPONSE_TIP_TO_USER;
+        }
+
         if(waitingByName) {
             waitingByName = false;
-            MessageEnum response = MessageEnum.RESPONSE_HOUR_PUBLIC_TRANSPORT;
+            response = MessageEnum.RESPONSE_HOUR_PUBLIC_TRANSPORT;
             response.setPublicTransport(serchHourPublicTransport(userMessage));
-            return response.getMessage();
         }
 
         if(piecesMessage.contains("horário") || piecesMessage.contains("hora")) {
             waitingByName = true;
-            return MessageEnum.ASK_NAME_TRANSPORT_PUBLIC.getMessage();
+            response = MessageEnum.ASK_NAME_TRANSPORT_PUBLIC;
+
+        } else if (response == null) {
+            response = MessageEnum.SORRY_NOT_UNDERSTAND;
         }
-        else {
-            return MessageEnum.SORRY_NOT_UNDERSTAND.getMessage();
-        }
+
+        response.setUserName(userName);
+        return response.getMessage();
+    }
+
+    private boolean checkMessage(String targetMessage) {
+        return this.userMessage.contains(targetMessage);
     }
 
     private PublicTransport serchHourPublicTransport(String namePublicTransport) {

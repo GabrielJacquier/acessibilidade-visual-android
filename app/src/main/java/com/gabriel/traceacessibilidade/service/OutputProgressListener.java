@@ -34,6 +34,10 @@ public class OutputProgressListener extends UtteranceProgressListener {
                 }
             });
         }
+
+        if(OptionProgressListenerEnum.isKill(utteranceId)) {
+            System.exit(0);
+        }
     }
 
     @Override

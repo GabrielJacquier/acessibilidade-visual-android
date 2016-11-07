@@ -34,6 +34,10 @@ public class OutputVoiceMessageService implements TextToSpeech.OnInitListener {
         textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, OptionProgressListenerEnum.AFTER_NOT_LISTENING.getId());
     }
 
+    public void speechAfterKillAplication(String message) {
+        textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, OptionProgressListenerEnum.AFTER_KILL_APPLICATION.getId());
+    }
+
     @Override
     public void onInit(int status) {
         if(status != TextToSpeech.ERROR) {

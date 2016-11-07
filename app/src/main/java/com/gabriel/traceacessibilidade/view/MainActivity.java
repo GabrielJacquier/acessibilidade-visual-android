@@ -7,14 +7,16 @@ import android.os.Bundle;
 
 import com.gabriel.traceacessibilidade.R;
 
+import com.gabriel.traceacessibilidade.business.OutputVoiceMessageBusiness;
 import com.gabriel.traceacessibilidade.service.InputVoiceMessageService;
 import com.gabriel.traceacessibilidade.service.OutputVoiceMessageService;
 
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class MainActivity extends AppCompatActivity {
 
-    InputVoiceMessageService inputVoiceMessageService;
-    OutputVoiceMessageService outputVoiceMessageService;
+    private InputVoiceMessageService inputVoiceMessageService;
+    private OutputVoiceMessageService outputVoiceMessageService;
+    private OutputVoiceMessageBusiness outputVoiceMessageBusiness;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,8 +25,9 @@ public class MainActivity extends AppCompatActivity {
 
         inputVoiceMessageService = new InputVoiceMessageService(this);
         outputVoiceMessageService = new OutputVoiceMessageService(this, inputVoiceMessageService);
+        outputVoiceMessageBusiness = new OutputVoiceMessageBusiness(outputVoiceMessageService);
 
-        inputVoiceMessageService.setOutputVoiceMessageService(outputVoiceMessageService);
+        inputVoiceMessageService.setOutputVoiceMessageService(outputVoiceMessageBusiness);
 
     }
 

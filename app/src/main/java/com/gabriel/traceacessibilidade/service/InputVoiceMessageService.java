@@ -19,8 +19,7 @@ import java.util.ArrayList;
 public class InputVoiceMessageService implements RecognitionListener {
     private SpeechRecognizer speech = null;
     private Intent recognizerIntent = null;
-    private OutputVoiceMessageService outputVoiceMessageService;
-    private OutputVoiceMessageBusiness outputVoiceMessage = new OutputVoiceMessageBusiness();
+    private OutputVoiceMessageBusiness outputVoiceMessageBusiness;
 
 
     public InputVoiceMessageService(MainActivity activity) {
@@ -41,15 +40,15 @@ public class InputVoiceMessageService implements RecognitionListener {
         speech.startListening(recognizerIntent);
     }
 
-    public void setOutputVoiceMessageService(OutputVoiceMessageService outputVoiceMessageService) {
-        this.outputVoiceMessageService = outputVoiceMessageService;
+    public void setOutputVoiceMessageService(OutputVoiceMessageBusiness outputVoiceMessageBusiness) {
+        this.outputVoiceMessageBusiness = outputVoiceMessageBusiness;
     }
 
     @Override
     public void onResults(Bundle results) {
         ArrayList<String> possibleResults = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
         String userMessage = possibleResults.get(0);
-        outputVoiceMessageService.speechToUserAfterListening(outputVoiceMessage.responseMessage(userMessage));
+        outputVoiceMessageBusiness.responseMessage(userMessage);
     }
 
     @Override
