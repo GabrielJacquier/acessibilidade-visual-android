@@ -42,8 +42,6 @@ public class OutputVoiceMessageService implements TextToSpeech.OnInitListener {
     public void onInit(int status) {
         if(status != TextToSpeech.ERROR) {
             textToSpeech.setLanguage(Locale.getDefault());
-            textToSpeech.speak(MessageEnum.PRESENTATION.getMessage(), TextToSpeech.QUEUE_FLUSH, null, OptionProgressListenerEnum.AFTER_NOT_LISTENING.getId());
-            textToSpeech.speak(MessageEnum.ASK_NAME_USER.getMessage(), TextToSpeech.QUEUE_ADD, null, OptionProgressListenerEnum.AFTER_LISTENING.getId());
         }
     }
 }

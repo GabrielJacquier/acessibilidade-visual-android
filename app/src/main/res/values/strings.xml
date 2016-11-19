@@ -2,4 +2,5 @@
     <string name="app_name">TraceAcessibilidade</string>
 
     <string name="teste">Olá</string>
+    <string name="apresentacao">Ben-vindo ao Acessibilidade! Toque duas vezes na tela para obter suas informações!</string>
 </resources>
