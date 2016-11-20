@@ -1,7 +1,9 @@
 package com.gabriel.traceacessibilidade.view;
 
+import android.content.Context;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,7 +15,11 @@ import com.gabriel.traceacessibilidade.R;
 import com.gabriel.traceacessibilidade.business.OutputVoiceMessageBusiness;
 import com.gabriel.traceacessibilidade.model.MessageEnum;
 import com.gabriel.traceacessibilidade.service.InputVoiceMessageService;
+import com.gabriel.traceacessibilidade.service.NetworkingService;
+import com.gabriel.traceacessibilidade.service.NetworkingTask;
 import com.gabriel.traceacessibilidade.service.OutputVoiceMessageService;
+
+import java.io.IOException;
 
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class MainActivity extends AppCompatActivity {
@@ -31,10 +37,13 @@ public class MainActivity extends AppCompatActivity {
         inputVoiceMessageService = new InputVoiceMessageService(this);
         outputVoiceMessageService = new OutputVoiceMessageService(this, inputVoiceMessageService);
         outputVoiceMessageBusiness = new OutputVoiceMessageBusiness(outputVoiceMessageService);
-
         inputVoiceMessageService.setOutputVoiceMessageService(outputVoiceMessageBusiness);
 
         button = (Button) findViewById(R.id.apresentar);
+
+        NetworkingTask task = new NetworkingTask(getSystemService(Context.CONNECTIVITY_SERVICE));
+        task.execute("http://private-35a570-acessibilidade.apiary-mock.com/horarios");
+
     }
 
     public void apresentacao(View view) {
