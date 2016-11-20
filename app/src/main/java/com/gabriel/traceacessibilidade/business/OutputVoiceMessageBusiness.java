@@ -32,12 +32,19 @@ public class OutputVoiceMessageBusiness {
     }
 
     private boolean executeCommandVoice() {
-        boolean commandVoiceKill = checkMessage("xau") || checkMessage("tchau") || checkMessage("até mais");
+        boolean commandVoiceKill = checkMessage("xau") || checkMessage("tchau") || checkMessage("até logo");
         if(commandVoiceKill) {
             MessageEnum response = MessageEnum.THANK_YOU;
             response.setUserName(userName);
             outputVoiceMessageService.speechAfterKillAplication(response.getMessage());
         }
+
+        if((checkMessage("mais") && checkMessage("rápido")))
+            outputVoiceMessageService.upRateVoice();
+
+        if((checkMessage("mais") && (checkMessage("devagar") || checkMessage("lento"))))
+            outputVoiceMessageService.downRateVoice();
+
         return commandVoiceKill;
     }
 

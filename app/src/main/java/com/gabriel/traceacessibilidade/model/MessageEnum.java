@@ -5,13 +5,14 @@ package com.gabriel.traceacessibilidade.model;
  */
 
 public enum MessageEnum {
-    PRESENTATION("Olá. Bem-vindo ao aplicativo Acessibilidade! Nós podemos te informar os horários dos ônibus. Tudo o que você precisa fazer é só perguntar, e eu vou te ajudar!"),
+    PRESENTATION("Olá. Bem-vindo ao aplicativo Acessibilidade! Nós podemos te informar os horários dos ônibus. Após o apito sonoro você pode falar comigo!"),
     ASK_NAME_TRANSPORT_PUBLIC("{nomeUsuario}, de qual Ônibus você gostaria de saber o horário?!"),
     RESPONSE_HOUR_PUBLIC_TRANSPORT("O horário previsto para o ônibus {onibus} é de {horarioPontoFinal} no ponto final! E {horarioTerminal} no terminal!"),
     ASK_NAME_USER("Como é seu nome!?"),
     RESPONSE_TIP_TO_USER("Olá {nomeUsuario}! Para saber o horário de um ônibus, diga a palavra. Horário!"),
     THANK_YOU("{nomeUsuario}! Obrigada por usar o Acessibilidade, até logo!!"),
-    SORRY_NOT_UNDERSTAND("Desculpe! Não entendi! Você pode repetir, por favor!");
+    SORRY_NOT_UNDERSTAND("Desculpe! Não entendi! Você pode repetir!"),
+    AFTER_ALTER_RATE_SPEECH("Ok!");
 
     private String message;
     private PublicTransport publicTransport;

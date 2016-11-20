@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void apresentacao(View view) {
         outputVoiceMessageService.speechToUserAfterListening(MessageEnum.ASK_NAME_USER.getMessage());
-        button.setVisibility(View.INVISIBLE);
+        button.setEnabled(false);
     }
 
 }
