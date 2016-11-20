@@ -14,15 +14,16 @@ public enum MessageEnum {
     SORRY_NOT_UNDERSTAND("Desculpe! Não entendi! Você pode repetir!"),
     AFTER_ALTER_RATE_SPEECH("Ok!");
 
-    private String message;
+    private String messageTemplate;
     private PublicTransport publicTransport;
     private String userName = "";
 
     MessageEnum(String message) {
-        this.message = message;
+        this.messageTemplate = message;
     }
 
     public String getMessage() {
+        String message = this.messageTemplate;
         if(publicTransport != null) {
             message = message.replace("{onibus}", publicTransport.getName());
             message = message.replace("{horarioTerminal}", publicTransport.getHourBusTerminalText());
