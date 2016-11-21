@@ -1,17 +1,18 @@
 package com.gabriel.traceacessibilidade.model;
 
+import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.Timer;
 
 /**
  * Created by gabriel on 06/11/16.
  */
 
-public class PublicTransport {
+public class PublicTransport implements Serializable{
     private String itinerary;
     private String name;
-    private Date hourEndPoint;
-    private Date hourBusTerminal;
+    private List<Hours> hours;
 
     public String getItinerary() {
         return itinerary;
@@ -25,40 +26,41 @@ public class PublicTransport {
         return name;
     }
 
+    public List<Hours> getHours() {
+        return hours;
+    }
+
+    public void setHours(List<Hours> hours) {
+        this.hours = hours;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
 
-    public Date getHourEndPoint() {
-        return hourEndPoint;
-    }
-
-    public void setHourEndPoint(Date hourEndPoint) {
-        this.hourEndPoint = hourEndPoint;
-    }
-
-    public Date getHourBusTerminal() {
-        return hourBusTerminal;
-    }
-
-    public void setHourBusTerminal(Date hourBusTerminal) {
-        this.hourBusTerminal = hourBusTerminal;
-    }
-
-    public String getHourEndPointText() {
-        return getTextHoraDate(hourEndPoint);
-    }
-
-    public String getHourBusTerminalText() {
-        return getTextHoraDate(hourBusTerminal);
-    }
-
-    private String getTextHoraDate(Date date) {
-        String hour = "";
-        hour += String.valueOf(date.getHours()) + " horas";
-        if(date.getMinutes() != 0) {
-            hour += " e " + String.valueOf(date.getMinutes());
+    public String nextHourEndPoint() {
+        Date date = new Date();
+        int hourNow = date.getHours();
+        int minutesNow = date.getMinutes();
+        for (Hours hour: hours) {
+            if(hour.getMinuteIntEndPoint() > minutesNow && hour.getHourIntEndPoint() == hourNow)
+                return hour.getHourEndPointText();
+            if(hour.getHourIntEndPoint() > hourNow)
+                return hour.getHourEndPointText();
         }
-        return hour;
+        return hours.get(0).getHourEndPointText();
+    }
+
+    public String nextHourBusTerminal() {
+        Date date = new Date();
+        int hourNow = date.getHours();
+        int minutesNow = date.getMinutes();
+        for (Hours hour: hours) {
+            if(hour.getMinuteIntBusTerminal() > minutesNow && hour.getHourIntBusTerminal() == hourNow)
+                return hour.getHourBusTerminalText();
+            if(hour.getHourIntBusTerminal() > hourNow)
+                return hour.getHourBusTerminalText();
+        }
+        return hours.get(0).getHourBusTerminalText();
     }
 }

@@ -2,8 +2,12 @@ package com.gabriel.traceacessibilidade.business;
 
 import com.gabriel.traceacessibilidade.model.MessageEnum;
 import com.gabriel.traceacessibilidade.model.PublicTransport;
+import com.gabriel.traceacessibilidade.model.TransportAll;
 import com.gabriel.traceacessibilidade.service.OutputVoiceMessageService;
+import com.gabriel.traceacessibilidade.service.PersistService;
 
+import java.io.IOException;
+import java.text.Normalizer;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -17,10 +21,12 @@ public class OutputVoiceMessageBusiness {
     private boolean waitingByName;
     private String userName;
     private OutputVoiceMessageService outputVoiceMessageService;
+    private PersistService persistService;
     private String userMessage;
 
-    public OutputVoiceMessageBusiness(OutputVoiceMessageService outputVoiceMessageService) {
+    public OutputVoiceMessageBusiness(OutputVoiceMessageService outputVoiceMessageService, PersistService persistService) {
         this.outputVoiceMessageService = outputVoiceMessageService;
+        this.persistService = persistService;
     }
 
     public void responseMessage(String userMessage) {
@@ -58,9 +64,12 @@ public class OutputVoiceMessageBusiness {
         }
 
         if(waitingByName) {
-            waitingByName = false;
-            response = MessageEnum.RESPONSE_HOUR_PUBLIC_TRANSPORT;
-            response.setPublicTransport(serchHourPublicTransport(userMessage));
+            PublicTransport publicTransport = serchHourPublicTransport(userMessage);
+            if(publicTransport != null) {
+                waitingByName = false;
+                response = MessageEnum.RESPONSE_HOUR_PUBLIC_TRANSPORT;
+                response.setPublicTransport(publicTransport);
+            }
         }
 
         if(piecesMessage.contains("horário") || piecesMessage.contains("hora")) {
@@ -75,15 +84,30 @@ public class OutputVoiceMessageBusiness {
         return response.getMessage();
     }
 
+
     private boolean checkMessage(String targetMessage) {
         return this.userMessage.contains(targetMessage);
     }
 
     private PublicTransport serchHourPublicTransport(String namePublicTransport) {
-        PublicTransport publicTransport = new PublicTransport();
-        publicTransport.setHourBusTerminal(new Date());
-        publicTransport.setHourEndPoint(new Date());
-        publicTransport.setName(namePublicTransport);
-        return publicTransport;
+        TransportAll transportAll = (TransportAll) persistService.readObject(PersistService.KEY_PERSIST_PUBLIC_TRANSPORT);
+        PublicTransport publicTransportFinded = null;
+        if(transportAll != null) {
+            publicTransportFinded = findPublicTransportByName(namePublicTransport, transportAll.getPublicTransports());
+        }
+        return publicTransportFinded;
+    }
+
+    private PublicTransport findPublicTransportByName(String namePublicTransport, List<PublicTransport> transports) {
+        namePublicTransport = removeAccentsLetters(namePublicTransport);
+        for (PublicTransport publicTransport: transports) {
+            if(publicTransport.getName().equalsIgnoreCase(namePublicTransport))
+                return publicTransport;
+        }
+        return null;
+    }
+
+    private String removeAccentsLetters(String message) {
+        return Normalizer.normalize(message, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
     }
 }

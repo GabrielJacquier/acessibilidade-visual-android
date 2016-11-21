@@ -26,8 +26,8 @@ public enum MessageEnum {
         String message = this.messageTemplate;
         if(publicTransport != null) {
             message = message.replace("{onibus}", publicTransport.getName());
-            message = message.replace("{horarioTerminal}", publicTransport.getHourBusTerminalText());
-            message = message.replace("{horarioPontoFinal}", publicTransport.getHourEndPointText());
+            message = message.replace("{horarioTerminal}", publicTransport.nextHourBusTerminal());
+            message = message.replace("{horarioPontoFinal}", publicTransport.nextHourEndPoint());
         }
         message = message.replace("{nomeUsuario}", userName);
         return message;

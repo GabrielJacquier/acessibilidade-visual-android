@@ -22,16 +22,18 @@ import static android.provider.ContactsContract.CommonDataKinds.Website.URL;
 
 public class NetworkingService {
 
+    private final String EndPointAPI = "http://private-35a570-acessibilidade.apiary-mock.com/horarios";
+
     public boolean isOnline(Object obj) {
         ConnectivityManager connectivityManager = (ConnectivityManager) obj;
         NetworkInfo netInfo = connectivityManager.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
-    public void downloadTransportPublicHours() throws IOException {
+    public String downloadJsonTransportPublicHours() throws IOException {
         String json = null;
-        json = getJsonFromURL("http://private-35a570-acessibilidade.apiary-mock.com/horarios");
-        Log.d("Json", json);
+        json = getJsonFromURL(EndPointAPI);
+        return json;
     }
 
     public String getJsonFromURL(String urlString) throws IOException {
