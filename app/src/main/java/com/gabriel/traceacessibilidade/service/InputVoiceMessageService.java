@@ -6,6 +6,7 @@ import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.speech.tts.TextToSpeech;
+import android.util.Log;
 
 import com.gabriel.traceacessibilidade.business.OutputVoiceMessageBusiness;
 import com.gabriel.traceacessibilidade.view.MainActivity;
@@ -68,26 +69,21 @@ public class InputVoiceMessageService implements RecognitionListener {
 
     @Override
     public void onBufferReceived(byte[] buffer) {
-
     }
 
     @Override
     public void onEndOfSpeech() {
-
     }
 
     @Override
     public void onError(int error) {
-
     }
 
     @Override
     public void onPartialResults(Bundle partialResults) {
-
     }
 
     @Override
     public void onEvent(int eventType, Bundle params) {
-
     }
 }

@@ -1,5 +1,7 @@
 package com.gabriel.traceacessibilidade.business;
 
+import android.support.annotation.Nullable;
+
 import com.gabriel.traceacessibilidade.model.MessageEnum;
 import com.gabriel.traceacessibilidade.model.PublicTransport;
 import com.gabriel.traceacessibilidade.model.TransportAll;
@@ -18,10 +20,13 @@ import java.util.List;
 
 public class OutputVoiceMessageBusiness {
 
-    private boolean waitingByName;
-    private String userName;
     private OutputVoiceMessageService outputVoiceMessageService;
     private PersistService persistService;
+
+    private boolean waitingByName;
+    private boolean repeatLastResponse;
+    private String userName;
+    private MessageEnum lastMessageResponse = MessageEnum.RESPONSE_TIP_TO_USER;
     private String userMessage;
 
     public OutputVoiceMessageBusiness(OutputVoiceMessageService outputVoiceMessageService, PersistService persistService) {
@@ -32,7 +37,7 @@ public class OutputVoiceMessageBusiness {
     public void responseMessage(String userMessage) {
         this.userMessage = userMessage;
         if(!executeCommandVoice()) {
-            String message = chooseMenssageToResponse();
+            String message = prepareMessageToResponse();
             outputVoiceMessageService.speechToUserAfterListening(message);
         }
     }
@@ -45,18 +50,34 @@ public class OutputVoiceMessageBusiness {
             outputVoiceMessageService.speechAfterKillAplication(response.getMessage());
         }
 
-        if((checkMessage("mais") && checkMessage("rápido")))
+        if((checkMessage("mais") && checkMessage("rápido"))) {
             outputVoiceMessageService.upRateVoice();
+            repeatLastResponse = true;
+        }
 
-        if((checkMessage("mais") && (checkMessage("devagar") || checkMessage("lento"))))
+        if((checkMessage("mais") && checkMessage("devagar")) || checkMessage("lento")) {
             outputVoiceMessageService.downRateVoice();
+            repeatLastResponse = true;
+        }
+
 
         return commandVoiceKill;
     }
 
-    private String chooseMenssageToResponse() {
-        List<String> piecesMessage = Arrays.asList(userMessage.toLowerCase().split(" "));
+    private String prepareMessageToResponse() {
+        MessageEnum response = findMessageToResponse();
+        response.setUserName(userName);
+        lastMessageResponse = response;
+        return response.getMessage();
+    }
+
+    private MessageEnum findMessageToResponse() {
         MessageEnum response = null;
+
+        if(repeatLastResponse) {
+            repeatLastResponse = false;
+            return lastMessageResponse;
+        }
 
         if(userName == null) {
             userName = userMessage;
@@ -72,16 +93,16 @@ public class OutputVoiceMessageBusiness {
             }
         }
 
-        if(piecesMessage.contains("horário") || piecesMessage.contains("hora")) {
+        if(checkMessage("horário") || checkMessage("hora")) {
             waitingByName = true;
             response = MessageEnum.ASK_NAME_TRANSPORT_PUBLIC;
+        }
 
-        } else if (response == null) {
+        if (response == null) {
             response = MessageEnum.SORRY_NOT_UNDERSTAND;
         }
 
-        response.setUserName(userName);
-        return response.getMessage();
+        return response;
     }
 
 
@@ -101,7 +122,7 @@ public class OutputVoiceMessageBusiness {
     private PublicTransport findPublicTransportByName(String namePublicTransport, List<PublicTransport> transports) {
         namePublicTransport = removeAccentsLetters(namePublicTransport);
         for (PublicTransport publicTransport: transports) {
-            if(publicTransport.getName().equalsIgnoreCase(namePublicTransport))
+            if(removeAccentsLetters(publicTransport.getName()).equalsIgnoreCase(namePublicTransport))
                 return publicTransport;
         }
         return null;

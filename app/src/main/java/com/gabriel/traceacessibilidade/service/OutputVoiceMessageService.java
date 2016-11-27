@@ -18,7 +18,7 @@ import java.util.Locale;
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class OutputVoiceMessageService implements TextToSpeech.OnInitListener {
 
-    private float voiceRate = 2;
+    private float voiceRate = 3;
     private TextToSpeech textToSpeech = null;
     private OutputProgressListener outputProgressListener = null;
 
