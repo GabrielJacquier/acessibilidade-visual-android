@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.accessibility.AccessibilityManager;
 import android.widget.Button;
 
 import com.gabriel.traceacessibilidade.R;
@@ -25,6 +26,8 @@ import java.io.IOException;
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class MainActivity extends AppCompatActivity {
     private Button button = null;
+    private boolean speechLoaded;
+    private boolean start = true;
 
     private InputVoiceMessageService inputVoiceMessageService;
     private OutputVoiceMessageService outputVoiceMessageService;
@@ -42,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
         inputVoiceMessageService = new InputVoiceMessageService(this);
         outputVoiceMessageService = new OutputVoiceMessageService(this, inputVoiceMessageService);
+
         outputVoiceMessageBusiness = new OutputVoiceMessageBusiness(outputVoiceMessageService, persistService);
         inputVoiceMessageService.setOutputVoiceMessageService(outputVoiceMessageBusiness);
 
@@ -51,8 +55,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void apresentacao(View view) {
-        outputVoiceMessageService.speechToUserAfterListening(MessageEnum.ASK_NAME_USER.getMessage());
-        button.setEnabled(false);
+        if(!start) {
+            outputVoiceMessageBusiness.speechLastResponse();
+        }
+
+        if(speechLoaded && start) {
+            AccessibilityManager acessibilityService = (AccessibilityManager) getSystemService(Context.ACCESSIBILITY_SERVICE);
+            if(!acessibilityService.isEnabled()) {
+                outputVoiceMessageService.speechToUser(MessageEnum.PRESENTATION.getMessage());
+            }
+            outputVoiceMessageBusiness.clearVariables();
+            outputVoiceMessageService.speechToUserAfterListening(MessageEnum.ASK_NAME_USER.getMessage());
+            start = false;
+        }
+
+    }
+
+    public void speechLoaded() {
+        speechLoaded = true;
+        button.setContentDescription("Bem-vindo ao Acessibilidade! Toque duas vezes na tela para obter suas informações!");
     }
 
 }

@@ -5,13 +5,17 @@ package com.gabriel.traceacessibilidade.model;
  */
 
 public enum MessageEnum {
-    PRESENTATION("Olá. Bem-vindo ao aplicativo Acessibilidade! Nós podemos te informar os horários dos ônibus. Após o apito sonoro você pode falar comigo!"),
-    ASK_NAME_TRANSPORT_PUBLIC("{nomeUsuario}, de qual Ônibus você gostaria de saber o horário?!"),
-    RESPONSE_HOUR_PUBLIC_TRANSPORT("O horário previsto para o ônibus {onibus} é de {horarioPontoFinal} no ponto final! E {horarioTerminal} no terminal!"),
+    PRESENTATION("Bem-vindo ao Acessibilidade!"),
+    ASK_NAME_TRANSPORT_PUBLIC("De qual Ônibus você gostaria de saber o horário?!"),
+    RESPONSE_HOUR_PUBLIC_TRANSPORT("A previsão para o {onibus} é de {horarioPontoFinal} no ponto final! E {horarioTerminal} no terminal! diga horário para pesquisar novamente!"),
     ASK_NAME_USER("Como é seu nome!?"),
-    RESPONSE_TIP_TO_USER("Olá {nomeUsuario}! Para saber o horário de um ônibus, diga a palavra. Horário!"),
-    THANK_YOU("{nomeUsuario}! Obrigada por usar o Acessibilidade, até logo!!"),
-    SORRY_NOT_UNDERSTAND("Desculpe! Não entendi! Você pode repetir!"),
+    RESPONSE_TIP_TO_USER("Para saber o horário de um ônibus, diga Horário!"),
+    RESPONSE_TIP_HELP_TO_USER("Olá {nomeUsuario}! para saber sobre configurações diga Configurações! Para saber o horário de um ônibus, diga Horário!"),
+    THANK_YOU("{nomeUsuario}! Obrigada por usar o Acessibilidade!!"),
+    SORRY_NOT_UNDERSTAND("Não entendi! Fale novamente!"),
+    HELP_USER("Olá {nomeUsuario}! para alterar a velocidade da minha voz diga! " +
+            "Fale mais Rápido! Ou! Fale mais devagar! Para encerrar o aplicativo diga a palavra Xau! " +
+            "Espere até ouvir um sinal sonoro para responder! Obrigado!"),
     AFTER_ALTER_RATE_SPEECH("Ok!");
 
     private String messageTemplate;

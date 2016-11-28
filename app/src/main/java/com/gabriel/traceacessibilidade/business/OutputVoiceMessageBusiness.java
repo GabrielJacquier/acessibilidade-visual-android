@@ -34,23 +34,32 @@ public class OutputVoiceMessageBusiness {
         this.persistService = persistService;
     }
 
+    public void clearVariables() {
+        waitingByName = false;
+        repeatLastResponse = false;
+        userName = null;
+        lastMessageResponse = MessageEnum.RESPONSE_TIP_TO_USER;
+        userMessage = null;
+    }
+
+    public void speechLastResponse() {
+        outputVoiceMessageService.speechToUserAfterListening(lastMessageResponse.getMessage());
+    }
+
     public void responseMessage(String userMessage) {
         this.userMessage = userMessage;
-        if(!executeCommandVoice()) {
+        configurationSystem();
+
+        if(checkKillAplication()) {
+            killApplication();
+        } else {
             String message = prepareMessageToResponse();
             outputVoiceMessageService.speechToUserAfterListening(message);
         }
     }
 
-    private boolean executeCommandVoice() {
-        boolean commandVoiceKill = checkMessage("xau") || checkMessage("tchau") || checkMessage("até logo");
-        if(commandVoiceKill) {
-            MessageEnum response = MessageEnum.THANK_YOU;
-            response.setUserName(userName);
-            outputVoiceMessageService.speechAfterKillAplication(response.getMessage());
-        }
-
-        if((checkMessage("mais") && checkMessage("rápido"))) {
+    private void configurationSystem() {
+       if((checkMessage("mais") && checkMessage("rápido"))) {
             outputVoiceMessageService.upRateVoice();
             repeatLastResponse = true;
         }
@@ -60,8 +69,21 @@ public class OutputVoiceMessageBusiness {
             repeatLastResponse = true;
         }
 
+        if(checkMessage("configurações")) {
+            repeatLastResponse = true;
+            outputVoiceMessageService.speechToUser(MessageEnum.HELP_USER.getMessage());
+            lastMessageResponse = MessageEnum.RESPONSE_TIP_TO_USER;
+        }
+    }
 
-        return commandVoiceKill;
+    private boolean checkKillAplication()  {
+        return checkMessage("xau") || checkMessage("tchau") || checkMessage("até logo");
+    }
+
+    private void killApplication() {
+        MessageEnum response = MessageEnum.THANK_YOU;
+        response.setUserName(userName);
+        outputVoiceMessageService.speechAfterKillAplication(response.getMessage());
     }
 
     private String prepareMessageToResponse() {
@@ -81,7 +103,7 @@ public class OutputVoiceMessageBusiness {
 
         if(userName == null) {
             userName = userMessage;
-            response = MessageEnum.RESPONSE_TIP_TO_USER;
+            response = MessageEnum.RESPONSE_TIP_HELP_TO_USER;
         }
 
         if(waitingByName) {
@@ -107,7 +129,7 @@ public class OutputVoiceMessageBusiness {
 
 
     private boolean checkMessage(String targetMessage) {
-        return this.userMessage.contains(targetMessage);
+        return this.removeAccents(userMessage).contains(removeAccents(targetMessage));
     }
 
     private PublicTransport serchHourPublicTransport(String namePublicTransport) {
@@ -120,15 +142,15 @@ public class OutputVoiceMessageBusiness {
     }
 
     private PublicTransport findPublicTransportByName(String namePublicTransport, List<PublicTransport> transports) {
-        namePublicTransport = removeAccentsLetters(namePublicTransport);
+        namePublicTransport = removeAccents(namePublicTransport);
         for (PublicTransport publicTransport: transports) {
-            if(removeAccentsLetters(publicTransport.getName()).equalsIgnoreCase(namePublicTransport))
+            if(removeAccents(publicTransport.getName()).equalsIgnoreCase(namePublicTransport))
                 return publicTransport;
         }
         return null;
     }
 
-    private String removeAccentsLetters(String message) {
+    private String removeAccents(String message) {
         return Normalizer.normalize(message, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
     }
 }

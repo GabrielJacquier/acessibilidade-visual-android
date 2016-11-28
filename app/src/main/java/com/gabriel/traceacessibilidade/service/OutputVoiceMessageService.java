@@ -21,9 +21,11 @@ public class OutputVoiceMessageService implements TextToSpeech.OnInitListener {
     private float voiceRate = 3;
     private TextToSpeech textToSpeech = null;
     private OutputProgressListener outputProgressListener = null;
+    private MainActivity activityMain = null;
 
     public OutputVoiceMessageService(MainActivity activity, InputVoiceMessageService inputVoiceMessageService) {
         textToSpeech = new TextToSpeech(activity, this);
+        activityMain = activity;
         textToSpeech.setSpeechRate(voiceRate);
         outputProgressListener = new OutputProgressListener(activity, inputVoiceMessageService);
         textToSpeech.setOnUtteranceProgressListener(outputProgressListener);
@@ -60,6 +62,7 @@ public class OutputVoiceMessageService implements TextToSpeech.OnInitListener {
     public void onInit(int status) {
         if(status != TextToSpeech.ERROR) {
             textToSpeech.setLanguage(Locale.getDefault());
+            activityMain.speechLoaded();
         }
     }
 }
