@@ -42,6 +42,7 @@ public class OutputVoiceMessageBusiness {
         userMessage = null;
     }
 
+
     public void speechLastResponse() {
         outputVoiceMessageService.speechToUserAfterListening(lastMessageResponse.getMessage());
     }
@@ -89,8 +90,13 @@ public class OutputVoiceMessageBusiness {
     private String prepareMessageToResponse() {
         MessageEnum response = findMessageToResponse();
         response.setUserName(userName);
-        lastMessageResponse = response;
+        setLastMessageResponse(response);
         return response.getMessage();
+    }
+
+    private void setLastMessageResponse(MessageEnum response) {
+        if(lastMessageResponse.equals(MessageEnum.SORRY_NOT_UNDERSTAND))
+            lastMessageResponse = response;
     }
 
     private MessageEnum findMessageToResponse() {
